@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-remix-icon';
 import {useTheme} from '../../Context/ThemeProvidr';
@@ -29,7 +29,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({
       padding: 12,
       paddingRight: 18,
       borderBottomWidth: 1,
-      borderBottomColor: isDarkModeEnabled ? Colors?.primary : '#12121245',
+      borderBottomColor: Colors?.primary,
       width: '100%',
       justifyContent: 'space-between',
     },
@@ -43,17 +43,37 @@ const MainHeader: React.FC<MainHeaderProps> = ({
       style={[
         styles.header,
         {
-          backgroundColor: isDarkModeEnabled ? theme.background : '#fff',
+          backgroundColor: Colors.newBG,
         },
         {},
       ]}>
       {goBackTwice ? null : (
-        <TouchableOpacity onPress={handleBackPress}>
-          <Icon name="arrow-left-s-line" size={24} color={theme.text} />
+        <TouchableOpacity
+          onPress={handleBackPress}
+          style={{
+            padding: 6,
+            backgroundColor: '#ffaa0017',
+            borderRadius: 64,
+          }}>
+          <Icon name="arrow-left-s-line" size={24} color={Colors?.primary} />
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity onPress={toggleTheme} style={styles.toggleIcon}>
+      {title ? (
+        <Text
+          style={{
+            color: '#FFAA00',
+            fontFamily: 'Plus Jakarta Sans Bold',
+            fontWeight:900,
+            fontSize: 16,
+            marginTop: 8,
+          }}>
+          {title}
+        </Text>
+      ) : null}
+      <TouchableOpacity
+        onPress={toggleTheme}
+        style={[styles.toggleIcon, {opacity: 0.0}]}>
         <Icon
           name={!isDarkModeEnabled ? 'ri-moon-fill' : 'sun-line'}
           size={24}

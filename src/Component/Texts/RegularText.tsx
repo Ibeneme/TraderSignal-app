@@ -21,12 +21,12 @@ const RegularText = ({
 }: Props) => {
   const {isDarkModeEnabled} = useTheme();
   const {fontScale, width} = useWindowDimensions();
-  const textColor = color ? color : isDarkModeEnabled ? '#fff' : '#121212';
+  const textColor = color ? color :  '#fff';
   const textAlignCenter = 'center';
   return (
     <Text
       style={{
-        color: color ? color : isDarkModeEnabled ? '#fff' : '#000',
+        color: color ? color : '#fff',
         fontFamily: 'Plus Jakarta Sans Regular',
         fontSize: fontSize * fontScale,
         textAlign: textAlign ? textAlignCenter : 'left',

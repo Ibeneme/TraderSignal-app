@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     marginVertical: 24,
   },
   btnText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Plus Jakarta Sans SemiBold',
     color: '#fff',
   },

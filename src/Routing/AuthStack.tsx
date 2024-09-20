@@ -9,17 +9,23 @@ import CreatePasswordScreen from '../Pages/Auth/CreatePassword';
 import WhatBringsYouHerePage from '../Pages/Auth/WhatNext';
 import KYCOptionsPage from '../Pages/kyc/Kyc';
 import KYCImageUpload from '../Pages/kyc/ImageUpload';
+import SplashScreen from '../Pages/Auth/SplashScreen';
+import FirstPage from '../Pages/Auth/FirstPage';
+import Academy from '../Pages/Auth/Academy';
+import NoCommunityChat from '../Pages/Community/NotSignedCommunity';
 
 type AuthStackParamList = {
-  CreateAccount: undefined;
   LoginScreen: undefined;
+  CreateAccount: undefined;
   ForgotPasswordScreen: undefined;
   OTPScreen: undefined;
   ResetOTPScreen: undefined;
   CreatePasswordScreen: undefined;
   WhatBringsYouHerePage: undefined;
-
-  // KYCOptionsPage: undefined;
+  SplashScreen: undefined;
+  FirstPage: undefined;
+  Academy: undefined;
+  NoCommunityChat: undefined
   // KYCImageUpload: undefined;
 };
 
@@ -27,15 +33,30 @@ const AuthStack = createStackNavigator<AuthStackParamList>();
 
 const AuthStackNavigator: React.FC = () => {
   return (
-    <AuthStack.Navigator initialRouteName="CreateAccount">
+    <AuthStack.Navigator initialRouteName="FirstPage">
       <AuthStack.Screen
-        name="CreateAccount"
-        component={CreateAccount}
+        name="FirstPage"
+        component={FirstPage}
         options={{headerShown: false}}
       />
       <AuthStack.Screen
         name="LoginScreen"
         component={LoginScreen}
+        options={{headerShown: false}}
+      />
+      <AuthStack.Screen
+        name="NoCommunityChat"
+        component={NoCommunityChat}
+        options={{headerShown: false}}
+      />
+      <AuthStack.Screen
+        name="CreateAccount"
+        component={CreateAccount}
+        options={{headerShown: false}}
+      />
+         <AuthStack.Screen
+        name="Academy"
+        component={Academy}
         options={{headerShown: false}}
       />
       <AuthStack.Screen
@@ -63,7 +84,7 @@ const AuthStackNavigator: React.FC = () => {
         component={WhatBringsYouHerePage}
         options={{headerShown: false}}
       />
-{/* 
+      {/* 
       <AuthStack.Screen
         name="KYCOptionsPage"
         component={KYCOptionsPage}

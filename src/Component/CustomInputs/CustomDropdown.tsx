@@ -14,12 +14,14 @@ interface CustomDropdownProps {
   label?: string;
   options: string[];
   onSelect: (option: string) => void;
+  error?: string;
 }
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({
   label,
   options,
   onSelect,
+  error,
 }) => {
   const {isDarkModeEnabled, theme} = useTheme();
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -35,7 +37,10 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 
   return (
     <View style={styles.dropdownContainer}>
-      <Text style={[styles.label, {color: theme.text}]}>{label}</Text>
+      <Text
+        style={[styles.label, {color: isFocused ? Colors.primary : '#fff',  fontWeight: 900}]}>
+        {label}
+      </Text>
       <TouchableOpacity
         style={[
           styles.dropdownWrapper,
@@ -43,8 +48,10 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
             borderColor: isFocused
               ? Colors.primary
               : isDarkModeEnabled
-              ? '#ffffff45'
-              : '#12121245',
+              ? '#ffffff00'
+              : '#ffffff00',
+            backgroundColor: '#ffffff10',
+            borderRadius: 12,
           },
         ]}
         onPress={toggleVisibility}
@@ -57,11 +64,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
           style={[
             styles.selectedOption,
             {
-              color: isFocused
-                ? Colors.primary
-                : isDarkModeEnabled
-                ? '#fff'
-                : '#121212',
+              color: isFocused ? Colors.primary : '#fff',
             },
             ,
           ]}>
@@ -83,9 +86,9 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
         <View
           style={[
             styles.optionsContainer,
-            {backgroundColor: theme.background},
+            {backgroundColor: Colors.newBG, borderRadius: 12, marginTop: 10},
           ]}>
-          {options.map((option, index) => (
+          {options?.map((option, index) => (
             <TouchableOpacity
               key={index}
               style={styles.optionItem}
@@ -98,7 +101,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
               <Text
                 style={[
                   styles.optionText,
-                  {color: theme.text, fontSize: 14 * fontScale},
+                  {color: '#fff', fontSize: 14 * fontScale},
                 ]}>
                 {option}
               </Text>
@@ -106,6 +109,14 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
           ))}
         </View>
       )}
+
+      <Text
+        style={[
+          styles.errorText,
+          {color: Colors.primary, fontFamily: 'Plus Jakarta Sans Regular'},
+        ]}>
+        {error}
+      </Text>
     </View>
   );
 };
@@ -114,6 +125,11 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     marginTop: 16,
     width: '100%',
+  },
+  errorText: {
+    fontSize: 12,
+    marginTop: 3,
+    marginBottom: 8,
   },
   label: {
     fontSize: 14,
@@ -137,7 +153,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#ffaa00',
     paddingVertical: 5,
   },
   optionItem: {

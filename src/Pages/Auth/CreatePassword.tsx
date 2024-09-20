@@ -1,62 +1,71 @@
-import React from 'react';
-import {View} from 'react-native';
-import {Formik, Field} from 'formik';
+import React, {useState} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Modal,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
+import {Formik} from 'formik';
 import * as yup from 'yup';
-import CustomTextInput from '../../Component/CustomInputs/CustomTextInput';
-import BodyView from '../../Component/SafeAreaViewCustom/BodyView';
-import MainHeader from '../../Component/Header/MainHeaders';
+import NewCustomTextInput from '../../Component/CustomInputs/NewCustomTextInput';
 import SafeArea from '../../Component/SafeAreaViewCustom/SafeArea';
-import FullBtn from '../../Component/Buttons/FullBtn';
-import AuthTitleText from '../../Component/Header/AuthTitle.tsx/AuthTitle';
-import Icon from 'react-native-remix-icon';
+import MainHeader from '../../Component/Header/MainHeaders';
+import BodyView from '../../Component/SafeAreaViewCustom/BodyView';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {Colors} from '../../Component/Colors/Colors';
-import RegularText from '../../Component/Texts/RegularText';
-import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../Redux/Store/Store';
+import {resetPassword} from '../../Redux/Auth/Auth';
 
-interface FormValues {
-  password: string;
-  confirmPassword: string;
-}
+// Validation schema using Yup
+const validationSchema = yup.object().shape({
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
+    ),
+  confirmPassword: yup
+    .string()
+    .required('Confirm Password is required')
+    .oneOf([yup.ref('password')], 'Passwords must match'),
+});
 
-const CreatePasswordScreen: React.FC = () => {
-  const initialValues: FormValues = {
-    password: '',
-    confirmPassword: '',
-  };
-
-  const validationSchema = yup.object().shape({
-    password: yup
-      .string()
-      .required('Password is required')
-      .matches(
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"':;?/>.<,])(?!.*\s).{8,}$/,
-        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character',
-      ),
-    confirmPassword: yup
-      .string()
-      .required('Confirm Password is required')
-      .oneOf([yup.ref('password')], 'Passwords must match'),
-  });
-
+const CreatePasswordScreen = () => {
   const navigation = useNavigation();
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const route = useRoute();
+  const {email} = route.params;
 
-  const renderError = (fieldName: keyof FormValues, errors: any) => {
-    return (
-      errors[fieldName] && (
-        <View style={{marginTop: -20, marginBottom: 13}}>
-          <RegularText
-            color={Colors.primary}
-            fontSize={13}
-            textContent={errors[fieldName]}
-          />
-        </View>
-      )
-    );
-  };
-
-  const onSubmit = (values: FormValues) => {
-    console.log(values);
-    // Add your logic to handle password submission here
+  const dispatch = useDispatch<AppDispatch>();
+  const [formErrors, setFormErrors] = useState<string>('');
+  const [showLoading, setLoading] = useState(false);
+  console.log(email);
+  const handleResetPassword = values => {
+    setLoading(true);
+    console.log(values.password); // Log the new password
+    dispatch(resetPassword({email: email, password: values.password}))
+      .then(response => {
+        setLoading(false);
+        console.log('Registration lol', response?.payload);
+        if (response.payload.message === 'Password reset successful') {
+          setShowModal(true);
+        }
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log('Registration failed', error);
+        setFormErrors('Network Error');
+      })
+      .finally(() => {
+        //setResend('');
+        //setSubmitting(false);
+      });
   };
 
   return (
@@ -64,51 +73,173 @@ const CreatePasswordScreen: React.FC = () => {
       <View style={{backgroundColor: 'white', height: '100%'}}>
         <MainHeader />
         <BodyView>
-          <AuthTitleText
-            text="Create New Password"
-            title="Create Password"
-            icon={<Icon name="lock" size={20} color={Colors.white} />}
-            marginTop={24}
-            ctaText=""
-          />
+          <Text
+            style={{
+              fontFamily: 'Plus Jakarta Sans Bold',
+              fontWeight: 900,
+              fontSize: 18,
+              color: '#fff',
+              marginTop: 48,
+            }}>
+            Reset Password
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Plus Jakarta Sans Regular',
+              fontSize: 12,
+              marginVertical: 4,
+              marginBottom: 32,
+              color: '#fff',
+            }}>
+            Please enter your new password and confirm it.
+          </Text>
           <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}>
-            {({handleChange, handleSubmit, errors}) => (
-              <View>
-                <Field
-                  component={CustomTextInput}
-                  name="password"
-                  label="Password"
-                  placeholder="Enter password"
-                  secureTextEntry
+            initialValues={{
+              password: '',
+              confirmPassword: '',
+            }}
+            onSubmit={handleResetPassword}
+            validationSchema={validationSchema}>
+            {({handleChange, handleSubmit, values, errors}) => (
+              <>
+                <NewCustomTextInput
+                  label="New Password"
+                  value={values.password}
                   onChangeText={handleChange('password')}
-                  fontFamily="Plus Jakarta Sans SemiBold"
-                  fontSize={13}
-                />
-                {renderError('password', errors)}
-                <Field
-                  component={CustomTextInput}
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  placeholder="Confirm password"
+                  error={errors.password}
+                  placeholder="Enter New Password"
                   secureTextEntry
-                  onChangeText={handleChange('confirmPassword')}
-                  fontFamily="Plus Jakarta Sans SemiBold"
-                  fontSize={13}
                 />
-                {renderError('confirmPassword', errors)}
+                <NewCustomTextInput
+                  label="Confirm Password"
+                  value={values.confirmPassword}
+                  onChangeText={handleChange('confirmPassword')}
+                  error={errors.confirmPassword}
+                  placeholder="Confirm Password"
+                  secureTextEntry
+                />
 
-                <FullBtn buttonText="Submit" onPress={handleSubmit} />
-              </View>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleSubmit()}>
+                  {showLoading ? (
+                    <ActivityIndicator color={'#fff'} size={16} />
+                  ) : (
+                    <Text
+                      style={{
+                        fontFamily: 'Plus Jakarta Sans Regular',
+                        fontSize: 14,
+
+                        color: Colors.newBG,
+                      }}>
+                      Reset Password
+                    </Text>
+                  )}
+                </TouchableOpacity>
+
+                {/* <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                  <Text
+                    style={{
+                      fontFamily: 'Plus Jakarta Sans Regular',
+                      fontSize: 14,
+                      color: Colors.newBG,
+                    }}>
+                    Reset Password
+                  </Text>
+                </TouchableOpacity> */}
+              </>
             )}
           </Formik>
-          <View style={{marginBottom: 48}}></View>
+
+          {/* Modal to show success message */}
+          <Modal
+            visible={showModal}
+            animationType="fade"
+            transparent={true}
+            onRequestClose={() => setShowModal(false)}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Image
+                  source={require('../../../assets/images/green.png')}
+                  style={styles.image}
+                />
+                <Text style={styles.modalTitle}>Password Reset Successful</Text>
+
+                <Text style={styles.modalText}>
+                  Your password has been successfully reset.
+                </Text>
+                <TouchableOpacity
+                  style={[styles.modalButton, {width: '100%'}]}
+                  onPress={() => navigation.navigate('LoginScreen')}>
+                  <Text style={styles.modalButtonText}>Back to Login</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </BodyView>
       </View>
     </SafeArea>
   );
 };
+
+const styles = StyleSheet.create({
+  image: {
+    width: 100, // Adjust the width as needed
+    height: 100, // Adjust the height as needed
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderRadius: 5,
+    marginTop: 20,
+    alignItems: 'center',
+    marginBottom: 64,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 16,
+  },
+  modalContent: {
+    backgroundColor: Colors.newBG,
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    borderColor: '#62D944',
+    borderWidth: 2,
+    width: '100%',
+  },
+  modalTitle: {
+    fontFamily: 'Plus Jakarta Sans Bold',
+    fontWeight: 900,
+    fontSize: 16,
+    marginBottom: 10,
+    color: '#fff',
+  },
+  modalText: {
+    fontFamily: 'Plus Jakarta Sans Regular',
+    fontSize: 13,
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#fff',
+  },
+  modalButton: {
+    backgroundColor: '#62D944',
+    paddingHorizontal: 48,
+    paddingVertical: 16,
+    borderRadius: 5,
+    marginTop: 36,
+  },
+  modalButtonText: {
+    fontFamily: 'Plus Jakarta Sans SemiBold',
+    fontSize: 14,
+    color: Colors.newBG,
+    textAlign: 'center',
+  },
+});
 
 export default CreatePasswordScreen;

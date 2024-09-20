@@ -31,7 +31,7 @@ const AuthTitleText: React.FC<AuthTitleTextProps> = ({
 }) => {
   const {isDarkModeEnabled, theme} = useTheme(); // Use the useTheme hook
   const {width, fontScale} = useWindowDimensions();
-  const textColor = isDarkModeEnabled ? '#fff' : '#121212';
+  const textColor = isDarkModeEnabled ? '#fff' : '#fff';
 
   return (
     <View>
@@ -57,6 +57,7 @@ const AuthTitleText: React.FC<AuthTitleTextProps> = ({
                   color: textColor,
                   fontFamily: 'Plus Jakarta Sans Regular',
                   fontSize: 13 * fontScale,
+                 
                 }}>
                 {text} {''}
                 {''}
@@ -66,6 +67,7 @@ const AuthTitleText: React.FC<AuthTitleTextProps> = ({
                     color: Colors?.primary,
                     fontFamily: 'Plus Jakarta Sans SemiBold',
                     fontSize: 13 * fontScale,
+                    
                   }}>
                   {''} {ctaText}
                 </Text>

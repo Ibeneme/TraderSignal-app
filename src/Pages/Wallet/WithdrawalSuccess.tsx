@@ -1,6 +1,12 @@
 import React from 'react';
-import {View, Image, TouchableOpacity, useWindowDimensions} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  useWindowDimensions,
+  Text,
+} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import BodyView from '../../Component/SafeAreaViewCustom/BodyView';
 import MainHeader from '../../Component/Header/MainHeaders';
 import SafeArea from '../../Component/SafeAreaViewCustom/SafeArea';
@@ -12,9 +18,11 @@ import SemiBoldText from '../../Component/Texts/SemiBoldText';
 
 const WithdrawalSuccessScreen: React.FC = () => {
   const navigation = useNavigation();
-
+  const route = useRoute();
+  const {amount} = route.params;
+  console.log(amount, 'pagepage');
   const handleGoBackToWallet = () => {
-    navigation.navigate('Wallet' as never);
+    navigation.navigate('WithdrawalScreen' as never);
   };
   const {isDarkModeEnabled} = useTheme();
   const {height} = useWindowDimensions();
@@ -38,17 +46,22 @@ const WithdrawalSuccessScreen: React.FC = () => {
                 alignItems: 'center',
                 padding: 16,
                 borderRadius: 24,
-                backgroundColor: isDarkModeEnabled ? '#000000' : '#ffffff',
+                backgroundColor: '#ffffff12',
               }}>
               <Image
                 source={require('../../../assets/images/Success.png')}
                 style={{width: 100, height: 100, marginVertical: 48}}
               />
 
-              <View style={{marginBottom: 20, flexDirection: 'row', alignItems:'baseline'}}>
+              <View
+                style={{
+                  marginBottom: 20,
+                  flexDirection: 'row',
+                  alignItems: 'baseline',
+                }}>
                 <BoldText
                   fontSize={39}
-                  textContent="100 "
+                  textContent={amount}
                   //textAlign="center"
                 />
                 <BoldText
@@ -60,14 +73,20 @@ const WithdrawalSuccessScreen: React.FC = () => {
 
               <SemiBoldText
                 fontSize={16}
-                textContent="Withdrawal Successful"
+                textContent="Processing Withdrawal"
                 //textAlign="center"
               />
-              <RegularText
-                fontSize={13}
-                textContent="You’ve successfully withdrawn USDT 90,000 to your external address"
-                textAlign
-              />
+              <Text
+                style={{
+                  color: '#fff',
+                  textAlign: 'center',
+                  fontSize: 13,
+                  marginTop: 12,
+                  fontFamily: 'Plus Jakarta Sans Regular',
+                }}>
+                We processing your payments please wait a while your wallet
+                address will be credited shortly{' '}
+              </Text>
               <TouchableOpacity onPress={handleGoBackToWallet}>
                 <FullBtn
                   buttonText="Back to Wallet"

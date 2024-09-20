@@ -19,12 +19,13 @@ const BoldText = ({
 }: Props) => {
   const {isDarkModeEnabled} = useTheme();
   const {fontScale} = useWindowDimensions();
-  const textColor = color ? color : isDarkModeEnabled ? '#f8f8f8' : '#121212';
+  const textColor = color ? color : '#fff';
 
   return (
     <Text
       style={{
         color: textColor,
+        fontWeight: 900,
         fontFamily: 'Plus Jakarta Sans Bold',
         fontSize: fontSize * fontScale,
         textAlign: textAlign ? 'center' : 'left',

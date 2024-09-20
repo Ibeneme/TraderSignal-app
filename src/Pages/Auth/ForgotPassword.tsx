@@ -1,51 +1,63 @@
-import React from 'react';
-import { View } from 'react-native';
-import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
-import CustomTextInput from '../../Component/CustomInputs/CustomTextInput';
-import BodyView from '../../Component/SafeAreaViewCustom/BodyView';
-import MainHeader from '../../Component/Header/MainHeaders';
+import React, {useState} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
+import {Formik} from 'formik';
+import * as yup from 'yup';
+import NewCustomTextInput from '../../Component/CustomInputs/NewCustomTextInput';
 import SafeArea from '../../Component/SafeAreaViewCustom/SafeArea';
-import FullBtn from '../../Component/Buttons/FullBtn';
-import AuthTitleText from '../../Component/Header/AuthTitle.tsx/AuthTitle';
-import Icon from 'react-native-remix-icon';
-import { Colors } from '../../Component/Colors/Colors';
-import RegularText from '../../Component/Texts/RegularText';
-import { useNavigation } from '@react-navigation/native';
+import MainHeader from '../../Component/Header/MainHeaders';
+import BodyView from '../../Component/SafeAreaViewCustom/BodyView';
+import {useNavigation} from '@react-navigation/native';
+import {Colors} from '../../Component/Colors/Colors';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../Redux/Store/Store';
+import {forgotPassword} from '../../Redux/Auth/Auth';
 
-interface FormValues {
-  email: string;
-}
+// Validation schema using Yup
+const validationSchema = yup.object().shape({
+  email: yup.string().email('Invalid email').required('Email is required'),
+});
 
-const ForgotPasswordScreen: React.FC = () => {
-  const initialValues: FormValues = {
-    email: '',
-  };
+const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
 
-  const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-  });
+  const dispatch = useDispatch<AppDispatch>();
+  const [formErrors, setFormErrors] = useState<string>('');
 
-  const renderError = (fieldName: keyof FormValues, errors: any) => {
-    return (
-      errors[fieldName] && (
-        <View style={{marginTop: -20, marginBottom: 13}}>
-          <RegularText
-            color={Colors.primary}
-            fontSize={13}
-            textContent={errors[fieldName]}
-          />
-        </View>
-      )
-    );
-  };
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const onSubmit = (values: FormValues) => {
-    console.log(values);
-    navigation.navigate('ResetOTPScreen' as never);
+  const handleForgotPassword = async values => {
+    setLoading(true); // Set loading state to true
+    console.log(values.email); // Log the email value
+
+    try {
+      const response = await dispatch(forgotPassword(values.email));
+      console.log('Registration successful', response?.payload);
+      switch (response?.payload) {
+        case 200:
+          navigation.navigate('ResetOTPScreen', {email: values.email}); // Pass email as params
+          break;
+        case 422:
+          setFormErrors('Please fill your email and password correctly');
+          break;
+        case 400:
+          setFormErrors('You do not have an account with this email');
+          break;
+        default:
+          setFormErrors('Network Error.');
+          break;
+      }
+    } catch (error) {
+      console.log('Registration failed', error);
+      setFormErrors('Network Error');
+    } finally {
+      setLoading(false); // Set loading state to false regardless of success or failure
+    }
   };
 
   return (
@@ -53,38 +65,92 @@ const ForgotPasswordScreen: React.FC = () => {
       <View style={{backgroundColor: 'white', height: '100%'}}>
         <MainHeader />
         <BodyView>
-          <AuthTitleText
-            title="Forgot Password?"
-            text="Enter your email"
-            icon={<Icon name="email" size={20} color={Colors.white} />}
-            marginTop={24}
-            ctaText=""
-          />
+          <Text
+            style={{
+              fontFamily: 'Plus Jakarta Sans Bold',
+              fontWeight: 900,
+              fontSize: 18,
+              color: '#fff',
+              marginTop: 48,
+            }}>
+            Forgot Password
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Plus Jakarta Sans Regular',
+              fontSize: 12,
+              marginVertical: 4,
+              marginBottom: 32,
+              color: '#fff',
+            }}>
+            Please enter your email address to reset your password.
+          </Text>
           <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}>
-            {({handleSubmit, errors, handleChange}) => ( // added handleChange here
-              <View>
-                <Field
-                  component={CustomTextInput}
-                  name="email"
+            initialValues={{
+              email: '',
+            }}
+            onSubmit={handleForgotPassword}
+            validationSchema={validationSchema}>
+            {({handleChange, handleSubmit, values, errors}) => (
+              <>
+                <NewCustomTextInput
                   label="Email Address"
-                  placeholder="Enter email address"
-                  fontFamily="Plus Jakarta Sans SemiBold"
-                  fontSize={13}
-                  onChangeText={handleChange('email')} // added onChangeText
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  error={errors.email}
+                  placeholder="Enter Email Address"
                 />
-                {renderError('email', errors)}
-                <FullBtn buttonText="Submit" onPress={handleSubmit} />
-              </View>
+                <TouchableOpacity
+                  style={[styles.button, loading && {backgroundColor: '#ccc'}]}
+                  onPress={() => handleForgotPassword(values)}
+                  disabled={loading}>
+                  {loading ? (
+                    <ActivityIndicator size="small" color={Colors.newBG} />
+                  ) : (
+                    <Text
+                      style={{
+                        fontFamily: 'Plus Jakarta Sans Regular',
+                        fontSize: 14,
+                        color: Colors.newBG,
+                      }}>
+                      Reset Password
+                    </Text>
+                  )}
+                </TouchableOpacity>
+
+                {formErrors ? (
+                  <View
+                    style={{
+                      backgroundColor: '#Ff000045',
+                      marginVertical: 24,
+                      padding: 16,
+                    }}>
+                    <Text style={styles.errorText}>{formErrors}</Text>
+                  </View>
+                ) : null}
+              </>
             )}
           </Formik>
-          <View style={{marginBottom: 48}}></View>
         </BodyView>
       </View>
     </SafeArea>
   );
 };
+
+const styles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    fontFamily: 'Plus Jakarta Sans Regular',
+  },
+  button: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderRadius: 5,
+    marginTop: 20,
+    alignItems: 'center',
+    marginBottom: 64,
+  },
+});
 
 export default ForgotPasswordScreen;

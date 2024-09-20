@@ -13,7 +13,7 @@ type Props = {
 const MediumText = ({fontSize = 16, textAlign, color, textContent, onPress}: Props) => {
   const {isDarkModeEnabled} = useTheme();
   const {fontScale} = useWindowDimensions();
-  const textColor = color ? color : isDarkModeEnabled ? '#fff' : '#121212';
+  const textColor = color ? color : '#fff';
   const textAlignCenter = 'center';
   return (
     <Text

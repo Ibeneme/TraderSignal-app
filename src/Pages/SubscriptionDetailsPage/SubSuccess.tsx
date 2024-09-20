@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {View, Image, TouchableOpacity, useWindowDimensions} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import BodyView from '../../Component/SafeAreaViewCustom/BodyView';
 import MainHeader from '../../Component/Header/MainHeaders';
 import SafeArea from '../../Component/SafeAreaViewCustom/SafeArea';
 import RegularText from '../../Component/Texts/RegularText';
 import FullBtn from '../../Component/Buttons/FullBtn';
-import { useTheme } from '../../Context/ThemeProvidr';
+import {useTheme} from '../../Context/ThemeProvidr';
 import BoldText from '../../Component/Texts/BoldText';
 import SemiBoldText from '../../Component/Texts/SemiBoldText';
 
@@ -16,11 +16,11 @@ const SubscriptionSuccessScreen: React.FC = () => {
   const handleGoBackToWallet = () => {
     navigation.navigate('Home' as never);
   };
-  const { isDarkModeEnabled } = useTheme();
-  const { height } = useWindowDimensions();
+  const {isDarkModeEnabled} = useTheme();
+  const {height} = useWindowDimensions();
   return (
     <SafeArea>
-      <View style={{ height: '100%' }}>
+      <View style={{height: '100%'}}>
         <MainHeader />
         <BodyView color="#f4f4f4">
           <View
@@ -36,11 +36,13 @@ const SubscriptionSuccessScreen: React.FC = () => {
                 alignItems: 'center',
                 padding: 16,
                 borderRadius: 24,
-                backgroundColor: isDarkModeEnabled ? '#000000' : '#ffffff',
+                backgroundColor: '#ffffff17',
+                borderColor: '#ffaa00',
+                borderWidth: 1,
               }}>
               <Image
                 source={require('../../../assets/images/Success.png')}
-                style={{ width: 100, height: 100, marginVertical: 48 }}
+                style={{width: 100, height: 100, marginVertical: 48}}
               />
 
               {/* <View style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'baseline' }}>

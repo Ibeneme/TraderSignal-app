@@ -45,8 +45,7 @@ const WhatBringsYouHerePage: React.FC = () => {
 
   const onSubmit = (values: any) => {
     console.log(values.selectedOption);
-    navigation.navigate('KYCOptionsPage' as never); // Handle the selected option on form submission
-    // Add navigation logic based on selected option
+    navigation.navigate('KYCOptionsPage' as never);
   };
 
   return (

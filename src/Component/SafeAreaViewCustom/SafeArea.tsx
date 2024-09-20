@@ -1,6 +1,7 @@
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useTheme} from '../../Context/ThemeProvidr';
+import {Colors} from '../Colors/Colors';
 
 type Props = {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ const SafeArea = ({children}: Props) => {
     <SafeAreaView
       style={[
         styles.safeArea,
-        {backgroundColor: isDarkModeEnabled ? '#121212' : '#ffffff'},
+        {backgroundColor: isDarkModeEnabled ? Colors.newBG : Colors.newBG},
       ]}>
       {children}
     </SafeAreaView>

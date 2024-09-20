@@ -12,7 +12,7 @@ type Props = {
 const SemiBoldText = ({fontSize = 16, color, textContent, onPress}: Props) => {
   const {isDarkModeEnabled} = useTheme();
   const {fontScale} = useWindowDimensions();
-  const textColor = color ? color : isDarkModeEnabled ? '#fff' : '#121212';
+  const textColor = color ? color : '#fff' ;
 
   return (
     <Text

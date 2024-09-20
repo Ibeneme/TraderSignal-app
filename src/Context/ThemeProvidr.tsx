@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
 import {useColorScheme} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Colors} from '../Component/Colors/Colors';
 
 interface ThemeContextType {
   isDarkModeEnabled: boolean;
@@ -11,21 +12,21 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const lightThemeColors = {
-  background: '#FFF',
+  background: Colors.newBG,
   text: '#000000',
   views: '#ffffff',
   walletViews: '#ffffff',
-  backgroundAuth: '#ffffff',
-  backgroundDark: '#fff',
+  backgroundAuth: Colors.newBG,
+  backgroundDark: Colors.newBG,
 };
 
 const darkThemeColors = {
-  background: '#121212',
+  background: Colors.newBG,
   text: '#CDD1D6',
   views: '#ffffff09',
   walletViews: '#ffffff10',
-  backgroundAuth: '#131418',
-  backgroundDark: '#121212',
+  backgroundAuth: Colors.newBG,
+  backgroundDark: Colors.newBG,
 };
 
 export const ThemeProvider: React.FC<{children: any}> = ({children}) => {

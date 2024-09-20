@@ -1,6 +1,7 @@
 import {KeyboardAvoidingView, ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {useTheme} from '../../Context/ThemeProvidr';
+import {Colors} from '../Colors/Colors';
 
 type Props = {
   children: React.ReactNode;
@@ -18,12 +19,12 @@ const BodyView = ({children, color, paddingHorizontal}: Props) => {
       style={[
         styles.safeArea,
         {
-          backgroundColor: isDarkModeEnabled ? '#121212' : colorBG,
+          backgroundColor: isDarkModeEnabled ? Colors.newBG : Colors.newBG,
           paddingHorizontal: paddingHorizontal ? 0 : 12,
         },
       ]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <KeyboardAvoidingView behavior="padding">
+        <KeyboardAvoidingView behavior="padding" style={{height: 'auto'}}>
           {children}
         </KeyboardAvoidingView>
       </ScrollView>

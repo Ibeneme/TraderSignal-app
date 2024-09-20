@@ -1,33 +1,50 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-remix-icon';
 import {Text} from 'react-native';
-import {RouteProp} from '@react-navigation/native';
+import Icon from 'react-native-remix-icon';
+import {useFocusEffect} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../Redux/Store/Store';
+import {getCurrentUser, getUserProfile} from '../Redux/Profile/Profile';
 import {useTheme} from '../Context/ThemeProvidr';
 import {Colors} from '../Component/Colors/Colors';
 import Home from '../Pages/Home/Home';
-import Signals from '../Pages/Home/Signals';
-import Subscriptions from '../Pages/Home/Subscriptions';
-import Profile from '../Pages/Home/Profile';
-import Wallet from '../Pages/Home/Wallet';
+import MySubsCommunities from '../Pages/SubscriptionDetailsPage/MySubsCommunities';
+import NewProfileScreen from '../Pages/Home/NewProfile';
+import CoursePage from '../Pages/Academy/Preview/CoursePage';
+import CheckPayCommunity from '../Pages/Wallet/CheckPayCommunity';
+import HomeIcon from '../Component/icons/HomeIcon';
+import UserIcon from '../Component/icons/UserIcon';
+import AcademyIcon from '../Component/icons/Academy';
+import HomeScreen from '../Pages/Academy/Preview/HomePage';
 
-type TabParamList = {
-  Home: undefined;
-  Signals: undefined;
-  Subscriptions: undefined;
- // Wallet: undefined;
-  Profile: undefined;
-};
-
-const Tab = createBottomTabNavigator<TabParamList>();
-
-type BottomTabNavigationProp = RouteProp<TabParamList, keyof TabParamList>;
+const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
-  const {isDarkModeEnabled, theme} = useTheme();
-  const activeColor = isDarkModeEnabled ? '#666' : Colors.primary;
-  const iconColor = isDarkModeEnabled ? '#fff' : '#666';
-  const labelColor = isDarkModeEnabled ? '#fff' : '#666'; // Set active label color to primary when focused
+  const {isDarkModeEnabled} = useTheme();
+  const activeColor = Colors.primary;
+  const iconColor = isDarkModeEnabled ? '#fff' : '#fff';
+  const labelColor = isDarkModeEnabled ? '#fff' : '#fff';
+  const dispatch = useDispatch<AppDispatch>();
+  const [userFetched, setUserFetched] = useState<any>([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getCurrentUser())
+        .then(response => {
+          dispatch(getUserProfile(response?.payload?.user?._id))
+            .then(res => {
+              setUserFetched(res?.payload);
+            })
+            .catch(error => console.error('Error fetching profile:', error));
+        })
+        .catch(error => console.error('Error fetching user:', error));
+
+      return () => {
+        // Cleanup, if needed
+      };
+    }, [dispatch]),
+  );
 
   return (
     <Tab.Navigator
@@ -36,162 +53,148 @@ const BottomTabNavigator = () => {
         tabBarInactiveTintColor: 'black',
         tabBarLabelStyle: {
           fontFamily: 'Plus Jakarta Sans Regular',
-          fontSize: 10,
+          fontSize: 12,
           marginTop: 4,
           color: iconColor,
         },
         tabBarStyle: {
-          backgroundColor: isDarkModeEnabled ? theme.background : '#fff',
+          backgroundColor: Colors.newBG,
+          paddingTop: 10,
+          borderTopColor: Colors.primary,
+          borderTopWidth: 1.4,
         },
       }}>
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          headerShown: false, // Hide the header
-          tabBarIcon: ({color, size, focused}) => (
-            <Icon
-              style={{marginTop: 12}}
-              name="home-line"
-              size={size}
-              color={focused ? Colors.primary : iconColor} // Apply activeColor when focused
+          headerShown: false,
+          tabBarIcon: ({focused}) => (
+            <HomeIcon
+              width={16}
+              height={16}
+              color={focused ? Colors.primary : labelColor}
             />
           ),
-          tabBarLabel: ({color, focused}) => (
+          tabBarLabel: ({focused}) => (
             <Text
               style={{
                 color: focused ? Colors.primary : labelColor,
                 fontSize: 12,
+                fontFamily: 'Plus Jakarta Sans SemiBold',
+                fontWeight: '700',
               }}>
               Home
             </Text>
           ),
         }}
       />
+
       <Tab.Screen
-        name="Signals"
-        component={Signals}
+        name="MySubsCommunities"
+        component={MySubsCommunities}
         options={{
-          headerShown: false, // Hide the header
-          tabBarIcon: ({color, size, focused}) => (
+          headerShown: false,
+          tabBarIcon: ({focused}) => (
             <Icon
-              style={{marginTop: 12}}
-              name="group-line"
-              size={size}
-              color={focused ? Colors.primary : iconColor} // Apply activeColor when focused
+              name="message-3-fill"
+              size={16}
+              color={focused ? Colors.primary : labelColor}
             />
           ),
-          tabBarLabel: ({color, focused}) => (
+          tabBarLabel: ({focused}) => (
             <Text
               style={{
                 color: focused ? Colors.primary : labelColor,
                 fontSize: 12,
+                fontFamily: 'Plus Jakarta Sans SemiBold',
+                fontWeight: '700',
               }}>
-              Signals
-            </Text> // Apply activeColor when focused
+              Communities
+            </Text>
           ),
         }}
       />
 
       <Tab.Screen
-        name="Subscriptions"
-        component={Subscriptions}
+        name="NewProfileScreen"
+        component={NewProfileScreen}
         options={{
-          headerShown: false, // Hide the header
-          tabBarIcon: ({color, size, focused}) => (
-            <Icon
-              style={{marginTop: 12}}
-              name="wallet-line"
-              size={size}
-              color={focused ? Colors.primary : iconColor} // Apply activeColor when focused
+          headerShown: false,
+          tabBarIcon: ({focused}) => (
+            <UserIcon
+              width={16}
+              height={16}
+              color={focused ? Colors.primary : labelColor}
             />
           ),
-          tabBarLabel: ({color, focused}) => (
+          tabBarLabel: ({focused}) => (
             <Text
               style={{
                 color: focused ? Colors.primary : labelColor,
                 fontSize: 12,
-              }}>
-              Subscriptions
-            </Text> // Apply activeColor when focused
-          ),
-        }}
-      />
-
-      {/* <Tab.Screen
-        name="Wallet"
-        component={Wallet}
-        options={{
-          headerShown: false, // Hide the header
-          tabBarIcon: ({color, size, focused}) => (
-            <Icon
-              style={{marginTop: 12}}
-              name="wallet-line"
-              size={size}
-              color={focused ? Colors.primary : iconColor} // Apply activeColor when focused
-            />
-          ),
-          tabBarLabel: ({color, focused}) => (
-            <Text
-              style={{
-                color: focused ? Colors.primary : labelColor,
-                fontSize: 12,
-              }}>
-              Wallet
-            </Text> // Apply activeColor when focused
-          ),
-        }}
-      /> */}
-
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          headerShown: false, // Hide the header
-          tabBarIcon: ({color, size, focused}) => (
-            <Icon
-              style={{marginTop: 12}}
-              name="user-line"
-              size={size}
-              color={focused ? Colors.primary : iconColor} // Apply activeColor when focused
-            />
-          ),
-          tabBarLabel: ({color, focused}) => (
-            <Text
-              style={{
-                color: focused ? Colors.primary : labelColor,
-                fontSize: 12,
+                fontFamily: 'Plus Jakarta Sans SemiBold',
+                fontWeight: '700',
               }}>
               Profile
-            </Text> // Apply activeColor when focused
+            </Text>
           ),
         }}
       />
 
-      {/* <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          headerShown: false, // Hide the header
-          tabBarIcon: ({color, size, focused}) => (
-            <Icon
-              style={{marginTop: 12}}
-              name="settings-line"
-              size={size}
-              color={focused ? Colors.primary : iconColor} // Apply activeColor when focused
-            />
-          ),
-          tabBarLabel: ({color, focused}) => (
-            <Text
-              style={{
-                color: focused ? Colors.primary : labelColor,
-                fontSize: 12,
-              }}>
-              Settings
-            </Text> // Apply activeColor when focused
-          ),
-        }}
-      /> */}
+      {userFetched?.proTraderSub || userFetched?.academySub ? (
+        <Tab.Screen
+          name="CoursePage"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <AcademyIcon
+                width={16}
+                height={16}
+                color={focused ? Colors.primary : labelColor}
+              />
+            ),
+            tabBarLabel: ({focused}) => (
+              <Text
+                style={{
+                  color: focused ? Colors.primary : labelColor,
+                  fontSize: 12,
+                  fontFamily: 'Plus Jakarta Sans SemiBold',
+                  fontWeight: '700',
+                }}>
+                Academy
+              </Text>
+            ),
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name="CheckPayCommunity"
+          component={CheckPayCommunity}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <AcademyIcon
+                width={16}
+                height={16}
+                color={focused ? Colors.primary : labelColor}
+              />
+            ),
+            tabBarLabel: ({focused}) => (
+              <Text
+                style={{
+                  color: focused ? Colors.primary : labelColor,
+                  fontSize: 12,
+                  fontFamily: 'Plus Jakarta Sans SemiBold',
+                  fontWeight: '700',
+                }}>
+                Academy
+              </Text>
+            ),
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 };

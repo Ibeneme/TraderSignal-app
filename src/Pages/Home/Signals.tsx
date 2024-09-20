@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Image, TouchableOpacity, ScrollView, Text} from 'react-native';
 import BodyView from '../../Component/SafeAreaViewCustom/BodyView';
 import MainHeader from '../../Component/Header/MainHeaders';
 import SafeArea from '../../Component/SafeAreaViewCustom/SafeArea';
@@ -11,6 +11,7 @@ import BoldText from '../../Component/Texts/BoldText';
 import {Colors} from '../../Component/Colors/Colors';
 import {useNavigation} from '@react-navigation/core';
 import {renderUserObject} from '../Signals/UserObject';
+import Channels from '../../Component/icons/Channels';
 
 export interface User {
   firstName: string;
@@ -68,11 +69,14 @@ const Signal: React.FC = () => {
                   paddingHorizontal: 14,
                   marginRight: 10,
                 }}>
-                <SemiBoldText
-                  color={activeUser === 'All' ? '#fff' : '#ffaa00'}
-                  textContent="All"
-                  fontSize={14}
-                />
+                <Text
+                  style={{
+                    color: activeUser === 'All' ? '#fff' : '#ffaa00',
+                    fontSize: 14,
+                    fontFamily: 'Plus Jakarta Sans SemiBold',
+                  }}>
+                  Home
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -89,11 +93,14 @@ const Signal: React.FC = () => {
                   paddingHorizontal: 14,
                   marginRight: 10,
                 }}>
-                <SemiBoldText
-                  color={activeUser === 'Ibeneme Ikenna' ? '#fff' : '#ffaa00'}
-                  textContent="Ibeneme Ikenna"
-                  fontSize={14}
-                />
+                <Text
+                  style={{
+                    color: activeUser === 'Ibeneme Ikenna' ? '#fff' : '#ffaa00',
+                    fontSize: 14,
+                    fontFamily: 'Plus Jakarta Sans SemiBold',
+                  }}>
+                  Ibeneme Ikenna
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -110,13 +117,14 @@ const Signal: React.FC = () => {
                   paddingHorizontal: 14,
                   marginRight: 10,
                 }}>
-                <SemiBoldText
-                  color={
-                    activeUser === 'Benjamin Jimmy' ? '#ffffff' : '#ffaa00'
-                  }
-                  textContent="Benjamin Jimmy"
-                  fontSize={14}
-                />
+                <Text
+                  style={{
+                    color: activeUser === 'Benjamin Jimmy' ? '#fff' : '#ffaa00',
+                    fontSize: 14,
+                    fontFamily: 'Plus Jakarta Sans SemiBold',
+                  }}>
+                  Benjamin Jimmy
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -133,11 +141,14 @@ const Signal: React.FC = () => {
                   paddingHorizontal: 14,
                   marginRight: 10,
                 }}>
-                <SemiBoldText
-                  color={activeUser === 'Tommy' ? '#fff' : '#ffaa00'}
-                  textContent="Tommy"
-                  fontSize={14}
-                />
+                <Text
+                  style={{
+                    color: activeUser === 'Tommy' ? '#fff' : '#ffaa00',
+                    fontSize: 14,
+                    fontFamily: 'Plus Jakarta Sans SemiBold',
+                  }}>
+                  Tommy
+                </Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -153,18 +164,25 @@ const Signal: React.FC = () => {
                 key={index}
                 style={{
                   padding: 12,
-                  backgroundColor: isDarkModeEnabled ? '#000' : '#fff',
+                  backgroundColor: isDarkModeEnabled ? '#ffffff12' : '#fff12',
                   marginVertical: 6,
                   borderRadius: 16,
                 }}
                 onPress={() => handleItemClick(user)}>
                 {renderUserObject(user)}
 
-                <RegularText
-                  textContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco "
-                  fontSize={14}
-                  lineHeight={22}
-                />
+                <Text
+                  style={{
+                    color: activeUser === 'Tommy' ? '#fff' : '#fff',
+
+                    fontFamily: 'Plus Jakarta Sans Regular',
+                    fontSize: 13,
+                    lineHeight: 22,
+                  }}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                </Text>
 
                 <View
                   style={{
@@ -177,7 +195,7 @@ const Signal: React.FC = () => {
                     style={{
                       backgroundColor: isDarkModeEnabled
                         ? '#0665F2'
-                        : '#0665F225',
+                        : '#0665F2',
                       paddingVertical: 12,
                       width: 90,
                       justifyContent: 'center',
@@ -187,7 +205,7 @@ const Signal: React.FC = () => {
                       paddingHorizontal: 14,
                     }}>
                     <SemiBoldText
-                      color={isDarkModeEnabled ? '#fff' : '#0665F2'}
+                      color={isDarkModeEnabled ? '#fff' : '#fff'}
                       textContent="BTC / USDT"
                       fontSize={10}
                     />
@@ -197,7 +215,7 @@ const Signal: React.FC = () => {
                     style={{
                       backgroundColor: isDarkModeEnabled
                         ? '#FF8400'
-                        : '#FF840025',
+                        : '#FF8400',
                       paddingVertical: 12,
                       width: 90,
                       justifyContent: 'center',
@@ -207,7 +225,7 @@ const Signal: React.FC = () => {
                       paddingHorizontal: 14,
                     }}>
                     <SemiBoldText
-                      color={isDarkModeEnabled ? '#fff' : '#FF8400'}
+                      color={isDarkModeEnabled ? '#fff' : '#fff'}
                       textContent="TP 1: 70,000"
                       fontSize={10}
                     />
@@ -217,7 +235,7 @@ const Signal: React.FC = () => {
                     style={{
                       backgroundColor: isDarkModeEnabled
                         ? '#EE06F2'
-                        : '#EE06F225',
+                        : '#EE06F2',
                       paddingVertical: 12,
                       width: 90,
                       justifyContent: 'center',
@@ -227,7 +245,7 @@ const Signal: React.FC = () => {
                       paddingHorizontal: 14,
                     }}>
                     <SemiBoldText
-                      color={isDarkModeEnabled ? '#fff' : '#EE06F2'}
+                      color={isDarkModeEnabled ? '#fff' : '#fff'}
                       textContent="TP 1: 70,000"
                       fontSize={10}
                     />
@@ -256,7 +274,31 @@ const Signal: React.FC = () => {
                 height: 200,
                 justifyContent: 'center',
               }}>
-              <BoldText textContent="No Signal Posts found" fontSize={16} />
+              <View>
+                <View
+                  style={{
+                    marginTop: 120,
+                    alignSelf: 'flex-start',
+                    backgroundColor: '#ffaa0012',
+                    padding: 16,
+                    borderRadius: 36,
+                    marginBottom: 12,
+                  }}>
+                  <Channels color="#ffaa0065" width={120} height={120} />
+                </View>
+                <Text
+                  style={{
+                    fontFamily: 'Plus Jakarta Sans SemiBold',
+                    fontSize: 14,
+                    marginVertical: 4,
+                    marginBottom: 32,
+                    color: '#ffaa00',
+
+                    textAlign: 'center',
+                  }}>
+                  No Signal Posts found
+                </Text>
+              </View>
             </View>
           ) : null}
         </BodyView>
